@@ -1,4 +1,5 @@
 local kong = kong
+-- https://github.com/zmartzone/lua-resty-openidc
 local oidc = require("resty.openidc")
 
 local jwt_oidc_validate = {
