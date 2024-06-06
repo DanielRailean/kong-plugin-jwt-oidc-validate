@@ -1,0 +1,14 @@
+_format_version: '3.0'
+_transform: false
+services:
+- name: my-service
+  url: https://example.com
+  plugins:
+  - name: jwt-oidc-validate
+    config:
+      discovery_url : https://example.com/.well-known/openid-configuration
+      header_name: my-authorization
+  routes:
+  - name: my-route
+    paths:
+    - /testroute
