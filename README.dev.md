@@ -3,7 +3,7 @@
 ## build the image
 
 ```sh
-docker build . -t kong-plugin
+docker build . -t kong-plugin-jwt-oidc-validate
 ```
 
 ## run the image
@@ -25,7 +25,7 @@ docker build . -t kong-plugin
     -p 8001:8001 \
     -p 8444:8444 \
     -v /host/kong-plugin-jwt-oidc-validate/kong/plugins/jwt-oidc-validate:/usr/local/share/lua/5.1/kong/plugins/jwt-oidc-validate \
-    kong-plugin
+    kong-plugin-jwt-oidc-validate
 ```
 
 ## post the config
