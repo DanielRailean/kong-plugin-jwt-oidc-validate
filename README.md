@@ -20,7 +20,7 @@ The configuration options include specifying the header name that contains the t
 | Parameter          | Type     | Required | Default        | Description                                                                 |
 |--------------------|----------|----------|----------------|-----------------------------------------------------------------------------|
 | `discovery_url`    | string   | No*       | None           | The URL for the OIDC discovery endpoint.                                    |
-| `use_token_issuer` | boolean  | No*       | None           | Flag to use the token issuer for validation instead of the discovery_url                                              |
+| `use_token_issuer` | boolean  | No*       | None           | Flag to use the token issuer for validation instead of the `discovery_url`                                              |
 | `header_name`      | string   | Yes      | `authorization` | The name of the header that contains the token.                             |
 
 \* either `discovery_url` or `use_token_issuer` must be configured, but not both.
