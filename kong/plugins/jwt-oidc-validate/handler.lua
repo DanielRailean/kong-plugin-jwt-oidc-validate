@@ -1,6 +1,9 @@
-local kong = kong
 -- https://github.com/zmartzone/lua-resty-openidc
 local oidc = require("resty.openidc")
+-- https://github.com/cdbattags/lua-resty-jwt
+local jwt = require("resty.jwt")
+
+OIDC_ISSUER_WELLKNOWN_SUFFIX = "/.well-known/openid-configuration"
 
 local jwt_oidc_validate = {
   -- same default priority as openid-connect (enterprise)
@@ -10,18 +13,48 @@ local jwt_oidc_validate = {
 }
 
 function jwt_oidc_validate:access(conf)
-local opts = {
-  -- The discovery endpoint of the OP. Enable to get the URI of all endpoints (Token, introspection, logout...)
-  discovery = conf.discovery_url,
-  auth_accept_token_as = "header",
-  auth_accept_token_as_header_name = conf.header_name,
-}
--- call authenticate for OpenID Connect user authentication
-local res, err = oidc.bearer_jwt_verify(opts)
-if err then
-  kong.response.exit(401)
-end
+  local discovery_url = conf.discovery_url
 
+  if conf.use_token_issuer then
+    local headers = kong.request.get_headers()
+    local bearer = headers[conf.header_name]
+
+    if not bearer then
+      return kong.response.exit(401, { title = "Unauthorized" })
+    end
+
+    local words = {}
+    for w in bearer:gmatch("%S+") do
+      table.insert(words, w)
+    end
+
+    local jwt_obj = jwt:load_jwt(words[2])
+    local payload = jwt_obj.payload
+    local issuer = payload.iss
+
+    if not issuer then
+      return kong.response.exit(401, { title = "Unauthorized" })
+    end
+
+    -- removes trailing slashes from the issuer
+    issuer = issuer:gsub("%/$", "")
+
+    discovery_url = issuer .. OIDC_ISSUER_WELLKNOWN_SUFFIX
+  end
+
+  local opts = {
+    -- The discovery endpoint of the OP. Enable to get the URI of all endpoints (Token, introspection, logout...)
+    discovery = discovery_url,
+    auth_accept_token_as = "header",
+    auth_accept_token_as_header_name = conf.header_name,
+  }
+
+  -- call authenticate for OpenID Connect user authentication
+  local res, err = oidc.bearer_jwt_verify(opts)
+  if err then
+    kong.log.err(err)
+    return kong.response.exit(401, { title = "Unauthorized" })
+  end
 end
 
 return jwt_oidc_validate

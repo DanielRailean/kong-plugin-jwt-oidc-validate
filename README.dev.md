@@ -9,7 +9,7 @@ docker build . -t kong-plugin-jwt-oidc-validate
 ## run the image
 
 ```sh
-  docker run -d --name kong \
+  docker run -d --name kong-oidc \
     -e "KONG_DATABASE=off" \
     -e "KONG_PROXY_ACCESS_LOG=/dev/stdout" \
     -e "KONG_ADMIN_ACCESS_LOG=/dev/stdout" \

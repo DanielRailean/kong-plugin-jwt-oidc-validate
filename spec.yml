@@ -6,8 +6,9 @@ services:
   plugins:
   - name: jwt-oidc-validate
     config:
-      discovery_url : https://example.com/.well-known/openid-configuration
-      header_name: my-authorization
+      # discovery_url: https://example.com/.well-known/openid-configuration
+      header_name: authorization
+      use_token_issuer: true
   routes:
   - name: my-route
     paths:

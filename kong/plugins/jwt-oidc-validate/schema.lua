@@ -10,7 +10,13 @@ local schema = {
           {
             discovery_url = {
               type = "string",
-              required = true
+              required = false,
+            }
+          },
+          {
+            use_token_issuer = {
+              type = "boolean",
+              required = false,
             }
           },
           {
@@ -18,6 +24,20 @@ local schema = {
               type = "string",
               required = true,
               default = "authorization"
+            }
+          },
+        },
+        entity_checks = {
+          {
+            mutually_exclusive = {
+              "discovery_url",
+              "use_token_issuer",
+            },
+          },
+          {
+            at_least_one_of = {
+              "discovery_url",
+              "use_token_issuer",
             }
           }
         }
