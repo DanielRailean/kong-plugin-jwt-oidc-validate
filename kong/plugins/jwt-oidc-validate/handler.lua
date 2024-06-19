@@ -13,6 +13,11 @@ local jwt_oidc_validate = {
 }
 
 function jwt_oidc_validate:access(conf)
+  -- check if preflight request and whether it should be authenticated
+  if not conf.run_on_preflight and kong.request.get_method() == "OPTIONS" then
+    return
+  end
+
   local discovery_url = conf.discovery_url
 
   if conf.use_token_issuer then

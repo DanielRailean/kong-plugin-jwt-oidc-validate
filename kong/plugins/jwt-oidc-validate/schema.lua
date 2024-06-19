@@ -20,6 +20,13 @@ local schema = {
             }
           },
           {
+            run_on_preflight = {
+              type = "boolean",
+              required = true,
+              default = true,
+            }
+          },
+          {
             header_name = {
               type = "string",
               required = true,
