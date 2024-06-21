@@ -33,6 +33,10 @@ function jwt_oidc_validate:access(conf)
       table.insert(words, w)
     end
 
+    if not words[2] then
+      return kong.response.exit(401, { title = "Unauthorized" })
+    end
+
     local jwt_obj = jwt:load_jwt(words[2])
     local payload = jwt_obj.payload
     local issuer = payload.iss
